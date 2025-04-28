@@ -1,7 +1,6 @@
-
 import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
-import { OrbitControls, Sphere, Box, useTexture } from '@react-three/drei';
+import { OrbitControls, Sphere, Box } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Extend JSX elements with Three.js objects
@@ -18,7 +17,8 @@ extend({
   Group: THREE.Group,
   AmbientLight: THREE.AmbientLight,
   PointLight: THREE.PointLight,
-  Mesh: THREE.Mesh
+  Mesh: THREE.Mesh,
+  Line: THREE.Line
 });
 
 // Explicitly declare JSX namespace for Three.js elements
@@ -38,7 +38,15 @@ declare global {
       'ambientLight': any;
       'pointLight': any;
       'mesh': any;
-      'line': any;
+    }
+  }
+}
+
+// We need to add the Line component separately to avoid conflict with SVG line
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'line': any & { ref?: React.RefObject<THREE.Line> };
     }
   }
 }
