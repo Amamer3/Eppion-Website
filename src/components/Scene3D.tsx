@@ -25,66 +25,20 @@ extend({
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      instancedMesh: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        ref?: React.RefObject<THREE.InstancedMesh>;
-        args?: [undefined, undefined, number];
-      };
-      sphereGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        args?: [number, number, number];
-      };
-      boxGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        args?: [number, number, number];
-      };
-      octahedronGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        args?: [number];
-      };
-      meshStandardMaterial: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        color?: string;
-        transparent?: boolean;
-        opacity?: number;
-        wireframe?: boolean;
-        emissive?: string;
-        emissiveIntensity?: number;
-      };
-      meshPhongMaterial: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        color?: string;
-        emissive?: string;
-        emissiveIntensity?: number;
-        transparent?: boolean;
-        opacity?: number;
-        wireframe?: boolean;
-      };
-      lineBasicMaterial: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        color?: string;
-        transparent?: boolean;
-        opacity?: number;
-      };
-      bufferGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
-      bufferAttribute: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        attach?: string;
-        count?: number;
-        array?: Float32Array;
-        itemSize?: number;
-      };
-      group: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        ref?: React.RefObject<THREE.Group>;
-        position?: [number, number, number];
-        scale?: [number, number, number] | number;
-      };
-      ambientLight: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        intensity?: number;
-      };
-      pointLight: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        position?: [number, number, number];
-        intensity?: number;
-        color?: string;
-      };
-      mesh: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        key?: string | number;
-        position?: [number, number, number];
-        rotation?: [number, number, number];
-        scale?: number | [number, number, number];
-      };
+      'instancedMesh': any;
+      'sphereGeometry': any;
+      'boxGeometry': any;
+      'octahedronGeometry': any;
+      'meshStandardMaterial': any;
+      'meshPhongMaterial': any;
+      'lineBasicMaterial': any;
+      'bufferGeometry': any;
+      'bufferAttribute': any;
+      'group': any;
+      'ambientLight': any;
+      'pointLight': any;
+      'mesh': any;
+      'line': any;
     }
   }
 }
