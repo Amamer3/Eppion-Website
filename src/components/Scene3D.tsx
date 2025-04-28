@@ -1,8 +1,93 @@
 
 import { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 import { OrbitControls, Sphere, Box, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+
+// Extend JSX elements with Three.js objects
+extend({ 
+  InstancedMesh: THREE.InstancedMesh,
+  SphereGeometry: THREE.SphereGeometry, 
+  BoxGeometry: THREE.BoxGeometry,
+  OctahedronGeometry: THREE.OctahedronGeometry,
+  MeshStandardMaterial: THREE.MeshStandardMaterial,
+  MeshPhongMaterial: THREE.MeshPhongMaterial,
+  LineBasicMaterial: THREE.LineBasicMaterial,
+  BufferGeometry: THREE.BufferGeometry,
+  BufferAttribute: THREE.BufferAttribute,
+  Group: THREE.Group,
+  AmbientLight: THREE.AmbientLight,
+  PointLight: THREE.PointLight,
+  Mesh: THREE.Mesh
+});
+
+// Explicitly declare JSX namespace for Three.js elements
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      instancedMesh: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        ref?: React.RefObject<THREE.InstancedMesh>;
+        args?: [undefined, undefined, number];
+      };
+      sphereGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        args?: [number, number, number];
+      };
+      boxGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        args?: [number, number, number];
+      };
+      octahedronGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        args?: [number];
+      };
+      meshStandardMaterial: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        color?: string;
+        transparent?: boolean;
+        opacity?: number;
+        wireframe?: boolean;
+        emissive?: string;
+        emissiveIntensity?: number;
+      };
+      meshPhongMaterial: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        color?: string;
+        emissive?: string;
+        emissiveIntensity?: number;
+        transparent?: boolean;
+        opacity?: number;
+        wireframe?: boolean;
+      };
+      lineBasicMaterial: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        color?: string;
+        transparent?: boolean;
+        opacity?: number;
+      };
+      bufferGeometry: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+      bufferAttribute: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        attach?: string;
+        count?: number;
+        array?: Float32Array;
+        itemSize?: number;
+      };
+      group: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        ref?: React.RefObject<THREE.Group>;
+        position?: [number, number, number];
+        scale?: [number, number, number] | number;
+      };
+      ambientLight: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        intensity?: number;
+      };
+      pointLight: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        position?: [number, number, number];
+        intensity?: number;
+        color?: string;
+      };
+      mesh: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        key?: string | number;
+        position?: [number, number, number];
+        rotation?: [number, number, number];
+        scale?: number | [number, number, number];
+      };
+    }
+  }
+}
 
 interface ParticlesProps {
   count: number;
