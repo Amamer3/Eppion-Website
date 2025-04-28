@@ -43,15 +43,6 @@ declare global {
   }
 }
 
-// Use a different name for Three.js Line to avoid conflict with SVG line
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'primitive': any & { object?: THREE.Line };
-    }
-  }
-}
-
 interface ParticlesProps {
   count: number;
   color?: string;
@@ -145,9 +136,18 @@ const ConnectionLines = () => {
           opacity: 0.4 
         });
         
-        // Use primitive to render a THREE.Line
         return (
-          <primitive key={i} object={new THREE.Line(geometry, material)} />
+          <mesh key={i}>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={positions.length}
+                array={new Float32Array(positions.flat())}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#7E69AB" transparent opacity={0.4} />
+          </mesh>
         );
       })}
     </group>
@@ -156,16 +156,17 @@ const ConnectionLines = () => {
 
 // Floating sphere with glow effect
 const Globe = () => {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const meshRef = useRef<THREE.Mesh>(null);
   
   useFrame(({ clock }) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.time.value = clock.getElapsedTime();
+    if (meshRef.current) {
+      meshRef.current.rotation.y = clock.getElapsedTime() * 0.1;
     }
   });
   
   return (
-    <Sphere args={[1.8, 64, 64]}>
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[1.8, 64, 64]} />
       <meshPhongMaterial
         color="#1A1F2C"
         emissive="#7E69AB"
@@ -174,7 +175,7 @@ const Globe = () => {
         opacity={0.8}
         wireframe
       />
-    </Sphere>
+    </mesh>
   );
 };
 
@@ -227,8 +228,13 @@ export const BackgroundScene: React.FC = () => {
   );
 };
 
+interface FloatingObjectsProps {
+  count?: number;
+  scrollY?: number;
+}
+
 // Floating geometric objects for background
-const FloatingObjects = ({ count = 10, scrollY = 0 }) => {
+const FloatingObjects: React.FC<FloatingObjectsProps> = ({ count = 10, scrollY = 0 }) => {
   const objects = useRef<THREE.Group>(null);
   
   useEffect(() => {
