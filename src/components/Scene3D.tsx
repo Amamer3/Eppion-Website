@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 import { OrbitControls, Sphere, Box } from '@react-three/drei';
@@ -42,11 +43,11 @@ declare global {
   }
 }
 
-// We need to add the Line component separately to avoid conflict with SVG line
+// Use a different name for Three.js Line to avoid conflict with SVG line
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      'line': any & { ref?: React.RefObject<THREE.Line> };
+      'primitive': any & { object?: THREE.Line };
     }
   }
 }
@@ -132,18 +133,21 @@ const ConnectionLines = () => {
           ]);
         }
         
+        // Create a line geometry and material
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute(
+          'position',
+          new THREE.Float32BufferAttribute(positions.flat(), 3)
+        );
+        const material = new THREE.LineBasicMaterial({ 
+          color: "#7E69AB", 
+          transparent: true, 
+          opacity: 0.4 
+        });
+        
+        // Use primitive to render a THREE.Line
         return (
-          <line key={i}>
-            <bufferGeometry>
-              <bufferAttribute
-                attach="attributes-position"
-                count={positions.length}
-                array={new Float32Array(positions.flat())}
-                itemSize={3}
-              />
-            </bufferGeometry>
-            <lineBasicMaterial color="#7E69AB" transparent opacity={0.4} />
-          </line>
+          <primitive key={i} object={new THREE.Line(geometry, material)} />
         );
       })}
     </group>
