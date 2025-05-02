@@ -86,9 +86,13 @@ export const isInViewport = (element: HTMLElement, offset = 100): boolean => {
  */
 export const scrollToElement = (elementId: string, duration = 800): void => {
   const element = document.getElementById(elementId);
-  if (!element) return;
+  if (!element) {
+    console.warn(`Element with ID "${elementId}" not found`);
+    return;
+  }
   
   const targetPosition = element.offsetTop;
+  console.log(`Scrolling to ${elementId} at position ${targetPosition}`);
   
   smoothScrollTo({
     targetPosition,
@@ -96,6 +100,7 @@ export const scrollToElement = (elementId: string, duration = 800): void => {
     onComplete: () => {
       // Update URL hash after scrolling completes
       window.history.pushState(null, '', `#${elementId}`);
+      console.log(`Completed scroll to ${elementId}`);
     }
   });
 };

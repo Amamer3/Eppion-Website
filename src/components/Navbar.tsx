@@ -1,12 +1,15 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { smoothScrollTo } from '@/lib/scrollUtils';
+import { smoothScrollTo, scrollToElement } from '@/lib/scrollUtils';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Navigation sections 
+  const navSections = ['home', 'about', 'services', 'mission', 'values', 'contact'];
   
   useEffect(() => {
     const handleScroll = () => {
@@ -60,24 +63,16 @@ const Navbar = () => {
     e.preventDefault();
     setMenuOpen(false);
     
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      const targetPosition = targetElement.offsetTop;
-      
-      // Update URL first to ensure we track navigation properly
-      window.history.pushState(null, '', `#${targetId}`);
-      
-      // Then scroll to the section
-      smoothScrollTo({
-        targetPosition,
-        duration: 800,
-        onComplete: () => {
-          // Update active section after scroll completes
-          setActiveSection(targetId);
-          console.log(`Scrolled to section: ${targetId}`); // Debug logging
-        }
-      });
-    }
+    console.log(`Navigation clicked: ${targetId}`);
+    
+    // Update active section immediately for better UX
+    setActiveSection(targetId);
+    
+    // Update URL hash
+    window.history.pushState(null, '', `#${targetId}`);
+    
+    // Use the scrollToElement function
+    scrollToElement(targetId);
   };
   
   return (
@@ -112,13 +107,13 @@ const Navbar = () => {
         
         {/* Desktop menu */}
         <ul className="hidden md:flex space-x-8">
-          {['home', 'about', 'services', 'mission', 'values', 'contact'].map(section => (
+          {navSections.map(section => (
             <li key={section}>
               <a
                 href={`#${section}`}
                 onClick={(e) => handleNavClick(e, section)}
                 className={cn(
-                  "text-sm uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple relative",
+                  "text-sm uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple relative cursor-pointer",
                   activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
                 )}
                 aria-current={activeSection === section ? "page" : undefined}
@@ -142,13 +137,13 @@ const Navbar = () => {
         aria-hidden={!menuOpen}
       >
         <ul className="flex flex-col items-center py-6 space-y-4">
-          {['home', 'about', 'services', 'mission', 'values', 'contact'].map(section => (
+          {navSections.map(section => (
             <li key={section}>
               <a
                 href={`#${section}`}
                 onClick={(e) => handleNavClick(e, section)}
                 className={cn(
-                  "text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple",
+                  "text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple cursor-pointer",
                   activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
                 )}
                 aria-current={activeSection === section ? "page" : undefined}

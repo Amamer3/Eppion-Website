@@ -10,7 +10,7 @@ const missionItems = [
     description: "Strong and meaningful relationships within the diaspora and beyond to gain knowledge and insights on market sectors."
   },
   {
-    key: "I",
+    key: "I1", // Changed from "I" to "I1" to make it unique
     title: "Invest",
     description: "In promising ventures that have the potential to create lasting impact in underserved communities."
   },
@@ -20,7 +20,7 @@ const missionItems = [
     description: "Entrepreneurs and businesses through complex challenges, leveraging our expertise and network."
   },
   {
-    key: "I",
+    key: "I2", // Changed from "I" to "I2" to make it unique
     title: "Ignite",
     description: "Innovation and growth in sectors that can drive positive change for marginalized communities."
   }
