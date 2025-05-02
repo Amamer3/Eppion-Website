@@ -102,6 +102,8 @@ const Navbar = () => {
         <button 
           className="md:hidden text-white focus:outline-none"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
         >
           <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
           <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${menuOpen ? 'opacity-0' : 'opacity-100'}`}></div>
@@ -119,6 +121,7 @@ const Navbar = () => {
                   "text-sm uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple relative",
                   activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
                 )}
+                aria-current={activeSection === section ? "page" : undefined}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
                 {activeSection === section && (
@@ -136,6 +139,7 @@ const Navbar = () => {
           "fixed top-[62px] left-0 w-full bg-eppion-charcoal z-40 transform transition-all duration-300 ease-in-out",
           menuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         )}
+        aria-hidden={!menuOpen}
       >
         <ul className="flex flex-col items-center py-6 space-y-4">
           {['home', 'about', 'services', 'mission', 'values', 'contact'].map(section => (
@@ -147,6 +151,7 @@ const Navbar = () => {
                   "text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple",
                   activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
                 )}
+                aria-current={activeSection === section ? "page" : undefined}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
               </a>

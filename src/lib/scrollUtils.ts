@@ -80,3 +80,22 @@ export const isInViewport = (element: HTMLElement, offset = 100): boolean => {
     rect.bottom >= -offset
   );
 };
+
+/**
+ * Scroll to a specific element by ID with smooth scrolling
+ */
+export const scrollToElement = (elementId: string, duration = 800): void => {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  
+  const targetPosition = element.offsetTop;
+  
+  smoothScrollTo({
+    targetPosition,
+    duration,
+    onComplete: () => {
+      // Update URL hash after scrolling completes
+      window.history.pushState(null, '', `#${elementId}`);
+    }
+  });
+};
