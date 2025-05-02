@@ -33,6 +33,26 @@ const Navbar = () => {
     };
     
     window.addEventListener('scroll', handleScroll);
+    // Initialize active section based on URL hash or scroll position
+    handleScroll();
+    
+    // Check for hash in URL on initial load and scroll to that section
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          smoothScrollTo({
+            targetPosition: element.offsetTop,
+            duration: 800,
+            onComplete: () => {
+              setActiveSection(hash);
+            }
+          });
+        }
+      }, 100); // Small delay to ensure DOM is fully loaded
+    }
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
@@ -44,14 +64,17 @@ const Navbar = () => {
     if (targetElement) {
       const targetPosition = targetElement.offsetTop;
       
+      // Update URL first to ensure we track navigation properly
+      window.history.pushState(null, '', `#${targetId}`);
+      
+      // Then scroll to the section
       smoothScrollTo({
         targetPosition,
         duration: 800,
         onComplete: () => {
-          // Update URL with hash after scroll completes
-          window.history.pushState(null, '', `#${targetId}`);
-          // Update active section
+          // Update active section after scroll completes
           setActiveSection(targetId);
+          console.log(`Scrolled to section: ${targetId}`); // Debug logging
         }
       });
     }
