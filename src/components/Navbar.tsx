@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { smoothScrollTo } from '@/lib/scrollUtils';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,9 +44,15 @@ const Navbar = () => {
     if (targetElement) {
       const targetPosition = targetElement.offsetTop;
       
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
+      smoothScrollTo({
+        targetPosition,
+        duration: 800,
+        onComplete: () => {
+          // Update URL with hash after scroll completes
+          window.history.pushState(null, '', `#${targetId}`);
+          // Update active section
+          setActiveSection(targetId);
+        }
       });
     }
   };
