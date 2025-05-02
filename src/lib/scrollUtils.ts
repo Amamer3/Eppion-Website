@@ -34,7 +34,10 @@ export const smoothScrollTo = ({
     
     const currentPosition = startPosition + distance * easedProgress;
     
-    window.scrollTo(0, currentPosition);
+    window.scrollTo({
+      top: currentPosition,
+      behavior: 'auto' // Use 'auto' instead of smooth to avoid conflicts with our custom animation
+    });
     
     if (onUpdate) {
       onUpdate(currentPosition);
@@ -83,6 +86,7 @@ export const isInViewport = (element: HTMLElement, offset = 100): boolean => {
 
 /**
  * Scroll to a specific element by ID with smooth scrolling
+ * Works reliably on both desktop and mobile
  */
 export const scrollToElement = (elementId: string, duration = 800): void => {
   const element = document.getElementById(elementId);
@@ -91,11 +95,15 @@ export const scrollToElement = (elementId: string, duration = 800): void => {
     return;
   }
   
-  const targetPosition = element.offsetTop;
-  console.log(`Scrolling to ${elementId} at position ${targetPosition}`);
+  // Calculate offset to account for fixed header
+  const headerOffset = 80; // Adjust based on your header height
+  const elementPosition = element.getBoundingClientRect().top;
+  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+  
+  console.log(`Scrolling to ${elementId} at position ${offsetPosition}`);
   
   smoothScrollTo({
-    targetPosition,
+    targetPosition: offsetPosition,
     duration,
     onComplete: () => {
       // Update URL hash after scrolling completes

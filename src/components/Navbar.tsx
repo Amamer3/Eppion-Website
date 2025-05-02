@@ -1,12 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { smoothScrollTo, scrollToElement } from '@/lib/scrollUtils';
+import { scrollToElement } from '@/lib/scrollUtils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   // Navigation sections 
   const navSections = ['home', 'about', 'services', 'mission', 'values', 'contact'];
@@ -45,13 +47,8 @@ const Navbar = () => {
       setTimeout(() => {
         const element = document.getElementById(hash);
         if (element) {
-          smoothScrollTo({
-            targetPosition: element.offsetTop,
-            duration: 800,
-            onComplete: () => {
-              setActiveSection(hash);
-            }
-          });
+          scrollToElement(hash, 800);
+          setActiveSection(hash);
         }
       }, 100); // Small delay to ensure DOM is fully loaded
     }
@@ -61,6 +58,8 @@ const Navbar = () => {
   
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
+    
+    // Close the mobile menu
     setMenuOpen(false);
     
     console.log(`Navigation clicked: ${targetId}`);
@@ -71,8 +70,15 @@ const Navbar = () => {
     // Update URL hash
     window.history.pushState(null, '', `#${targetId}`);
     
-    // Use the scrollToElement function
-    scrollToElement(targetId);
+    // Use the scrollToElement function with a slight delay on mobile
+    // to ensure the menu has time to close
+    if (isMobile) {
+      setTimeout(() => {
+        scrollToElement(targetId, 800);
+      }, 50);
+    } else {
+      scrollToElement(targetId, 800);
+    }
   };
   
   return (
@@ -138,12 +144,12 @@ const Navbar = () => {
       >
         <ul className="flex flex-col items-center py-6 space-y-4">
           {navSections.map(section => (
-            <li key={section}>
+            <li key={section} className="w-full text-center">
               <a
                 href={`#${section}`}
                 onClick={(e) => handleNavClick(e, section)}
                 className={cn(
-                  "text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple cursor-pointer",
+                  "block py-2 text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple cursor-pointer",
                   activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
                 )}
                 aria-current={activeSection === section ? "page" : undefined}
