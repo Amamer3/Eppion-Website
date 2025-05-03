@@ -9,6 +9,7 @@ import Values from '@/components/Values';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import SmoothScroll from '@/components/SmoothScroll';
+import ScrollIndicator from '@/components/ScrollIndicator';
 import { EnhancedBackgroundScene } from '@/components/Scene3D';
 
 const Index = () => {
@@ -45,6 +46,8 @@ const Index = () => {
     const content = (
       <>
         <Navbar />
+        {/* Add the ScrollIndicator component */}
+        <ScrollIndicator />
         <main ref={mainRef} className="opacity-0 transition-opacity duration-700">
           {/* Enhanced 3D Background Scene */}
           <EnhancedBackgroundScene />
