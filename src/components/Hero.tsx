@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { NetworkGlobe } from './Scene3D';
+import { NetworkGlobe } from '@/components/Scene3D';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
