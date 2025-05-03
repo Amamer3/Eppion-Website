@@ -9,7 +9,7 @@ import Values from '@/components/Values';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import SmoothScroll from '@/components/SmoothScroll';
-import { BackgroundScene } from '@/components/Scene3D';
+import { EnhancedBackgroundScene } from '@/components/Scene3D';
 
 const Index = () => {
   // Reference to main wrapper
@@ -46,8 +46,8 @@ const Index = () => {
       <>
         <Navbar />
         <main ref={mainRef} className="opacity-0 transition-opacity duration-700">
-          {/* 3D Background Scene */}
-          <BackgroundScene />
+          {/* Enhanced 3D Background Scene */}
+          <EnhancedBackgroundScene />
           
           {/* Page Sections */}
           <Hero />
