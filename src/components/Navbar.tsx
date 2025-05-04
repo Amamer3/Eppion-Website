@@ -56,7 +56,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
     
     // Close the mobile menu
@@ -70,15 +70,10 @@ const Navbar = () => {
     // Update URL hash
     window.history.pushState(null, '', `#${targetId}`);
     
-    // Use the scrollToElement function with a slight delay on mobile
-    // to ensure the menu has time to close
-    if (isMobile) {
-      setTimeout(() => {
-        scrollToElement(targetId, 800);
-      }, 50);
-    } else {
+    // Ensure we complete animation even on touch devices
+    setTimeout(() => {
       scrollToElement(targetId, 800);
-    }
+    }, isMobile ? 300 : 0); // Longer delay on mobile for menu closing animation
   };
   
   return (
@@ -137,7 +132,7 @@ const Navbar = () => {
       {/* Mobile menu */}
       <div 
         className={cn(
-          "fixed top-[62px] left-0 w-full bg-eppion-charcoal z-40 transform transition-all duration-300 ease-in-out",
+          "fixed top-[62px] left-0 w-full bg-eppion-charcoal/95 backdrop-blur-md z-40 transform transition-all duration-300 ease-in-out",
           menuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
         )}
         aria-hidden={!menuOpen}
@@ -148,8 +143,9 @@ const Navbar = () => {
               <a
                 href={`#${section}`}
                 onClick={(e) => handleNavClick(e, section)}
+                onTouchEnd={(e) => handleNavClick(e, section)} 
                 className={cn(
-                  "block py-2 text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple cursor-pointer",
+                  "block py-4 text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple cursor-pointer",
                   activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
                 )}
                 aria-current={activeSection === section ? "page" : undefined}
