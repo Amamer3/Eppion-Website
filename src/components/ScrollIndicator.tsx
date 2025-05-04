@@ -60,12 +60,17 @@ const ScrollIndicator = () => {
       scrollToElement(sections[targetIndex], 800);
     }
   };
-
-  // Skip rendering on mobile
-  if (isMobile) return null;
+  
+  // Adjust positioning based on mobile vs desktop
+  const positionClasses = isMobile 
+    ? "right-4 top-1/2 transform -translate-y-1/2 z-40"
+    : "right-6 top-1/2 transform -translate-y-1/2 z-40";
+    
+  // Adjust size based on mobile vs desktop  
+  const sizeClasses = isMobile ? "scale-75 origin-right" : "";
   
   return (
-    <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 flex flex-col items-center">
+    <div className={`fixed ${positionClasses} flex flex-col items-center ${sizeClasses}`}>
       {/* Previous section button */}
       <button 
         onClick={() => handleNavigateSection('prev')}

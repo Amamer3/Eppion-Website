@@ -76,6 +76,18 @@ const Navbar = () => {
     }, isMobile ? 300 : 0); // Longer delay on mobile for menu closing animation
   };
   
+  const toggleMobileMenu = (e: React.MouseEvent | React.TouchEvent) => {
+    // Prevent any default behavior and navigation
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Toggle menu state
+    setMenuOpen(!menuOpen);
+    
+    // Log menu state for debugging
+    console.log(`Mobile menu ${!menuOpen ? 'opened' : 'closed'}`);
+  };
+  
   return (
     <header 
       className={cn(
@@ -94,10 +106,10 @@ const Navbar = () => {
           </a>
         </div>
         
-        {/* Mobile menu button */}
+        {/* Mobile menu button - separate handler for toggling menu only */}
         <button 
           className="md:hidden text-white focus:outline-none"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={toggleMobileMenu}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
         >
@@ -129,7 +141,7 @@ const Navbar = () => {
         </ul>
       </nav>
       
-      {/* Mobile menu */}
+      {/* Mobile menu - updated to be informational only (no navigation) */}
       <div 
         className={cn(
           "fixed top-[62px] left-0 w-full bg-eppion-charcoal/95 backdrop-blur-md z-40 transform transition-all duration-300 ease-in-out",
@@ -137,24 +149,26 @@ const Navbar = () => {
         )}
         aria-hidden={!menuOpen}
       >
-        <ul className="flex flex-col items-center py-6 space-y-4">
-          {navSections.map(section => (
-            <li key={section} className="w-full text-center">
-              <a
-                href={`#${section}`}
-                onClick={(e) => handleNavClick(e, section)}
-                onTouchEnd={(e) => handleNavClick(e, section)} 
-                className={cn(
-                  "block py-4 text-base uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple cursor-pointer",
-                  activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
-                )}
-                aria-current={activeSection === section ? "page" : undefined}
-              >
-                {section.charAt(0).toUpperCase() + section.slice(1)}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="py-6 text-center">
+          <p className="text-eppion-purple font-medium mb-4">Use the scroll indicator to navigate</p>
+          <ul className="flex flex-col items-center py-2 space-y-1">
+            {navSections.map(section => (
+              <li key={section} className="w-full text-center">
+                <div
+                  className={cn(
+                    "block py-2 text-base uppercase tracking-wider",
+                    activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
+                  )}
+                >
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="text-gray-400 text-sm mt-4 px-4">
+            Use the scroll indicator on the right side of your screen to navigate through sections
+          </p>
+        </div>
       </div>
     </header>
   );

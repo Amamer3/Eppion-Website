@@ -102,6 +102,7 @@ export const scrollToElement = (elementId: string, duration = 800): void => {
   
   console.log(`Scrolling to ${elementId} at position ${offsetPosition}`);
   
+  // Use the smooth scrolling animation
   smoothScrollTo({
     targetPosition: offsetPosition,
     duration,
