@@ -46,7 +46,7 @@ const Index = () => {
     const content = (
       <>
         <Navbar />
-        {/* Add the ScrollIndicator component */}
+        {/* Always render ScrollIndicator regardless of device */}
         <ScrollIndicator />
         <main ref={mainRef} className="opacity-0 transition-opacity duration-700">
           {/* Enhanced 3D Background Scene */}

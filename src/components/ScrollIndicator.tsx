@@ -4,10 +4,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { scrollToElement } from '@/lib/scrollUtils';
 import { cn } from '@/lib/utils';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ScrollIndicator = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
+  const isMobile = useIsMobile();
   
   // Navigation sections 
   const sections = ['home', 'about', 'services', 'mission', 'values', 'contact'];
@@ -58,9 +60,12 @@ const ScrollIndicator = () => {
       scrollToElement(sections[targetIndex], 800);
     }
   };
+
+  // Skip rendering on mobile
+  if (isMobile) return null;
   
   return (
-    <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden md:flex flex-col items-center">
+    <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 flex flex-col items-center">
       {/* Previous section button */}
       <button 
         onClick={() => handleNavigateSection('prev')}
