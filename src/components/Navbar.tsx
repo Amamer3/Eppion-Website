@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { scrollToElement } from '@/lib/scrollUtils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import throttle from 'lodash.throttle';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,115 +10,87 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  // Navigation sections 
-  const navSections = ['home', 'about', 'services', 'mission', 'values', 'contact'];
-  
+  const navSections: string[] = ['home', 'about', 'services', 'mission', 'values', 'contact'];
+
   useEffect(() => {
-    const handleScroll = () => {
-      // Check if page is scrolled
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-      
-      // Determine active section
-      const sections = document.querySelectorAll('section[id]');
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
-      
-      sections.forEach(section => {
-        const sectionTop = (section as HTMLElement).offsetTop;
-        const sectionHeight = section.clientHeight;
-        const sectionId = section.getAttribute('id') || '';
-        
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-          setActiveSection(sectionId);
-        }
-      });
-    };
-    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -60% 0px' }
+    );
+
+    const handleScroll = throttle(() => {
+      setIsScrolled(window.scrollY > 50);
+    }, 100);
+
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach(section => observer.observe(section));
     window.addEventListener('scroll', handleScroll);
-    // Initialize active section based on URL hash or scroll position
-    handleScroll();
-    
-    // Check for hash in URL on initial load and scroll to that section
+
+    // Handle initial hash
     const hash = window.location.hash.replace('#', '');
-    if (hash) {
-      setTimeout(() => {
-        const element = document.getElementById(hash);
-        if (element) {
-          scrollToElement(hash, 800);
-          setActiveSection(hash);
-        }
-      }, 100); // Small delay to ensure DOM is fully loaded
+    if (hash && sections.length) {
+      const element = document.getElementById(hash);
+      if (element) {
+        scrollToElement(hash, 800);
+        setActiveSection(hash);
+      }
     }
-    
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      sections.forEach(section => observer.unobserve(section));
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
-  
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement> | React.TouchEvent<HTMLAnchorElement>, targetId: string) => {
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
-    
-    // Close the mobile menu
     setMenuOpen(false);
-    
-    console.log(`Navigation clicked: ${targetId}`);
-    
-    // Update active section immediately for better UX
     setActiveSection(targetId);
-    
-    // Update URL hash
     window.history.pushState(null, '', `#${targetId}`);
-    
-    // Ensure we complete animation even on touch devices
-    setTimeout(() => {
-      scrollToElement(targetId, 800);
-    }, isMobile ? 300 : 0); // Longer delay on mobile for menu closing animation
+    scrollToElement(targetId, 800);
   };
-  
+
   const toggleMobileMenu = (e: React.MouseEvent | React.TouchEvent) => {
-    // Prevent any default behavior and navigation
     e.preventDefault();
     e.stopPropagation();
-    
-    // Toggle menu state
     setMenuOpen(!menuOpen);
-    
-    // Log menu state for debugging
-    console.log(`Mobile menu ${!menuOpen ? 'opened' : 'closed'}`);
   };
-  
+
   return (
-    <header 
+    <header
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300 px-6 md:px-12",
-        isScrolled ? "py-3 glass-morphism backdrop-blur-lg" : "py-6"
+        'fixed top-0 w-full z-50 transition-all duration-300 px-6 md:px-12',
+        isScrolled ? 'py-3 glass-morphism backdrop-blur-lg' : 'py-6'
       )}
     >
-      <nav className="flex justify-between items-center max-w-7xl mx-auto">
+      <nav role="navigation" className="flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center">
-          <a 
-            href="#home" 
+          <a
+            href="#home"
             className="text-xl md:text-2xl font-bold text-gradient"
             onClick={(e) => handleNavClick(e, 'home')}
           >
             Eppion Ventures
           </a>
         </div>
-        
-        {/* Mobile menu button - separate handler for toggling menu only */}
-        <button 
+
+        <button
           className="md:hidden text-white focus:outline-none"
           onClick={toggleMobileMenu}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
         >
-          <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}></div>
-          <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${menuOpen ? 'opacity-0' : 'opacity-100'}`}></div>
-          <div className={`w-6 h-0.5 bg-white transition-all ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}></div>
+          <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+          <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${menuOpen ? 'opacity-0' : 'opacity-100'}`} />
+          <div className={`w-6 h-0.5 bg-white transition-all ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
         </button>
-        
-        {/* Desktop menu */}
+
         <ul className="hidden md:flex space-x-8">
           {navSections.map(section => (
             <li key={section}>
@@ -126,10 +98,10 @@ const Navbar = () => {
                 href={`#${section}`}
                 onClick={(e) => handleNavClick(e, section)}
                 className={cn(
-                  "text-sm uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple relative cursor-pointer",
-                  activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
+                  'text-sm uppercase tracking-wider transition-all duration-300 hover:text-eppion-purple relative cursor-pointer',
+                  activeSection === section ? 'text-eppion-purple font-medium' : 'text-gray-300'
                 )}
-                aria-current={activeSection === section ? "page" : undefined}
+                aria-current={activeSection === section ? 'page' : undefined}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
                 {activeSection === section && (
@@ -140,34 +112,31 @@ const Navbar = () => {
           ))}
         </ul>
       </nav>
-      
-      {/* Mobile menu - updated to be informational only (no navigation) */}
-      <div 
+
+      <div
         className={cn(
-          "fixed top-[62px] left-0 w-full bg-eppion-charcoal/95 backdrop-blur-md z-40 transform transition-all duration-300 ease-in-out",
-          menuOpen ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0"
+          'fixed top-[62px] left-0 w-full bg-eppion-charcoal/95 backdrop-blur-md z-40 transform transition-all duration-300 ease-in-out',
+          menuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
         )}
         aria-hidden={!menuOpen}
       >
         <div className="py-6 text-center">
-          <p className="text-eppion-purple font-medium mb-4">Use the scroll indicator to navigate</p>
           <ul className="flex flex-col items-center py-2 space-y-1">
             {navSections.map(section => (
               <li key={section} className="w-full text-center">
-                <div
+                <a
+                  href={`#${section}`}
+                  onClick={(e) => handleNavClick(e, section)}
                   className={cn(
-                    "block py-2 text-base uppercase tracking-wider",
-                    activeSection === section ? "text-eppion-purple font-medium" : "text-gray-300"
+                    'block py-2 text-base uppercase tracking-wider',
+                    activeSection === section ? 'text-eppion-purple font-medium' : 'text-gray-300'
                   )}
                 >
                   {section.charAt(0).toUpperCase() + section.slice(1)}
-                </div>
+                </a>
               </li>
             ))}
           </ul>
-          <p className="text-gray-400 text-sm mt-4 px-4">
-            Use the scroll indicator on the right side of your screen to navigate through sections
-          </p>
         </div>
       </div>
     </header>
