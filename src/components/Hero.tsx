@@ -5,9 +5,65 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+const useTypewriter = (text: string, delay: number = 100) => {
+  const [displayText, setDisplayText] = useState('');
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [shouldAnimate, setShouldAnimate] = useState(true);
+
+  useEffect(() => {
+    let currentIndex = 0;
+    let isErasing = false;
+    let typingTimeout: NodeJS.Timeout;
+    const startTime = Date.now();
+    const animationDuration = Math.floor(Math.random() * (10 - 5 + 1) + 5) * 60 * 1000; // Random duration between 5-10 minutes
+    
+    const typeNextCharacter = () => {
+      if (!shouldAnimate || Date.now() - startTime >= animationDuration) {
+        setShouldAnimate(false);
+        setIsTypingComplete(true);
+        setDisplayText(text); // Set full text when animation ends
+        return;
+      }
+
+      if (!isErasing && currentIndex < text.length) {
+        setDisplayText(text.slice(0, currentIndex + 1));
+        currentIndex++;
+        typingTimeout = setTimeout(typeNextCharacter, delay);
+      } else if (!isErasing && currentIndex >= text.length) {
+        isErasing = true;
+        typingTimeout = setTimeout(typeNextCharacter, delay * 10);
+      } else if (isErasing && currentIndex > 0) {
+        currentIndex--;
+        setDisplayText(text.slice(0, currentIndex));
+        typingTimeout = setTimeout(typeNextCharacter, delay / 2);
+      } else if (isErasing && currentIndex === 0) {
+        isErasing = false;
+        typingTimeout = setTimeout(typeNextCharacter, delay * 5);
+      }
+    };
+
+    typeNextCharacter();
+
+    return () => {
+      clearTimeout(typingTimeout);
+      if (Date.now() - startTime >= animationDuration) {
+        setDisplayText(text); // Keep full text if duration expired
+      } else {
+        setDisplayText('');
+      }
+      setIsTypingComplete(false);
+    };
+  }, [text, delay]);
+
+  return { displayText, isTypingComplete };
+};
+
 const Hero = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
+  
+  const { displayText: title1, isTypingComplete: title1Complete } = useTypewriter('Digital Network Globe', 100);
+  const { displayText: title2, isTypingComplete: title2Complete } = useTypewriter('Empowering Innovation in Technology and Marketing', 50);
   
   useEffect(() => {
     // Trigger animations after component mounts
@@ -62,8 +118,8 @@ const Hero = () => {
             isLoaded && "opacity-100 translate-y-0"
           )}
         >
-          <span className="text-gradient block mb-2">Digital Network Globe</span>
-          <span className="block">Empowering Innovation in Technology and Marketing</span>
+          <span className="text-gradient block mb-2">{title1}</span>
+          <span className="block">{title2}</span>
         </h1>
         
         <p 
