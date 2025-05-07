@@ -205,7 +205,7 @@ const Contact = () => {
             className="opacity-0 translate-y-20 transition-all duration-700 delay-200"
             ref={el => (elementsRef.current[2] = el)}
           >
-            <div className="glass-morphism p-6 rounded-lg mb-8">
+            {/* <div className="glass-morphism p-6 rounded-lg mb-8">
               <h3 className="h3 mb-6">Better yet, see us in person!</h3>
               <p className="text-gray-300 mb-4">
                 We love our customers, so feel free to visit during normal business hours.
@@ -235,7 +235,7 @@ const Contact = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> */}
             
             <div className="glass-morphism p-6 rounded-lg">
               <h3 className="text-xl font-semibold mb-4">Join Us on Our Journey</h3>

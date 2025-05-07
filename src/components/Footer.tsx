@@ -1,14 +1,47 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import { FaLinkedin, FaTwitter, FaInstagram, FaFacebook } from 'react-icons/fa';
 
-const Footer = () => {
-  const [email, setEmail] = useState('');
-  const [cookiesAccepted, setCookiesAccepted] = useState(false);
+interface Social {
+  name: string;
+  url: string;
+  icon: JSX.Element;
+}
+
+const SocialLinks: React.FC = () => {
+  const socials: Social[] = [
+    { name: '', url: 'https://www.linkedin.com/company/eppionventures', icon: <FaLinkedin /> },
+    { name: '', url: 'https://twitter.com/eppionventures', icon: <FaTwitter /> },
+    { name: '', url: 'https://www.instagram.com/eppionventures', icon: <FaInstagram /> },
+    { name: '', url: 'https://www.facebook.com/eppionventures', icon: <FaFacebook /> },
+  ];
+
+  return (
+    <div className="flex space-x-4">
+      {socials.map((social) => (
+        <a
+          key={social.name}
+          href={social.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-400 hover:text-eppion-purple transition-colors duration-300 flex items-center space-x-2 group"
+          aria-label={`Follow us on ${social.name}`}
+        >
+          <span className="text-2xl transform group-hover:scale-110 transition-transform duration-300">
+            {social.icon}
+          </span>
+          <span className="hidden md:inline text-sm font-medium">{social.name}</span>
+        </a>
+      ))}
+    </div>
+  );
+};
+
+const Footer: React.FC = () => {  const [email, setEmail] = useState<string>('');
   
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!email) {
@@ -27,21 +60,19 @@ const Footer = () => {
     
     setEmail('');
   };
-  
-  const handleAcceptCookies = () => {
-    setCookiesAccepted(true);
-    localStorage.setItem('cookiesAccepted', 'true');
-  };
-  
-  return (
-    <footer className="bg-eppion-charcoal pt-16 px-6">
+    return (
+    <footer className="bg-eppion-charcoal pt-16 px-6 shadow-lg glass-morphism">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-white/10">
           <div className="md:col-span-1">
-            <h3 className="text-2xl font-bold text-gradient mb-4">Eppion Ventures</h3>
+            <div className="flex flex-col-2 mb-6 ">
+              <img className="h-14 w-14 mb-4" src="/images/Eppion-logo-removebg-preview1.png"  alt="Eppoin-logo" />
+              <h3 className="text-2xl font-bold text-gradient pt-4">Eppion Ventures</h3>
+            </div>
             <p className="text-gray-400 mb-6">
               Empowering Innovation in Technology and Marketing
             </p>
+            <SocialLinks />
           </div>
           
           <div className="md:col-span-1">
@@ -81,7 +112,7 @@ const Footer = () => {
                 type="email"
                 placeholder="Email Address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 className="bg-transparent border-white/20 focus:border-eppion-purple"
               />
               <Button 
@@ -93,27 +124,9 @@ const Footer = () => {
             </form>
           </div>
         </div>
-        
-        <div className="py-6 text-center text-gray-500 text-sm">
+          <div className="py-6 text-center text-gray-500 text-sm">
           <p>Copyright © 2025 Eppion Ventures - All Rights Reserved.</p>
-        </div>
-      </div>
-      
-      {/* Cookie consent banner */}
-      {!cookiesAccepted && (
-        <div className="fixed bottom-0 left-0 right-0 bg-eppion-dark glass-morphism p-4 flex flex-col sm:flex-row justify-between items-center gap-4 z-50">
-          <p className="text-gray-300 text-sm">
-            This website uses cookies. We use cookies to analyze website traffic and optimize your website experience. 
-            By accepting our use of cookies, your data will be aggregated with all other user data.
-          </p>
-          <Button 
-            onClick={handleAcceptCookies}
-            className="bg-eppion-purple hover:bg-eppion-purple-light whitespace-nowrap"
-          >
-            Accept
-          </Button>
-        </div>
-      )}
+        </div>      </div>
     </footer>
   );
 };

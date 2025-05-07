@@ -93,7 +93,7 @@ const Mission = () => {
           >
             <h3 className="h3 mb-6">Vision Graphic</h3>
             <div className="aspect-video bg-eppion-gray rounded-lg glass-morphism flex items-center justify-center mb-4">
-              <span className="text-eppion-purple">Vision Graphic Placeholder</span>
+              <img className="rounded-md" src="https://images.pexels.com/photos/7648221/pexels-photo-7648221.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Vision graphic" />
             </div>
           </div>
           

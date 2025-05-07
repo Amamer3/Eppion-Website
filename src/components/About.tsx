@@ -71,7 +71,7 @@ const About = () => {
             <div className="glass-morphism p-8 rounded-lg h-full">
               <h3 className="h3 mb-6">Team Meeting</h3>
               <div className="aspect-video bg-eppion-gray rounded-lg mb-6 flex items-center justify-center">
-                <p className="text-eppion-purple">Team Image Placeholder</p>
+              <img src="https://images.pexels.com/photos/8866768/pexels-photo-8866768.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Team" />
               </div>
               <p className="text-gray-300">
                 Our collaborative approach brings together experts from diverse backgrounds to 
