@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Reqemli";
+  src: url("./assets/font/Reqemli.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer base {
   :root {
     --background: 240 10% 3.9%;
@@ -43,6 +50,7 @@
     @apply bg-eppion-dark text-foreground antialiased;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
     overflow-x: hidden;
+    font-family: "Reqemli", sans-serif !important;
   }
 
   html {
