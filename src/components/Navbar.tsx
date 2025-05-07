@@ -71,6 +71,7 @@ const Navbar = () => {
     >
       <nav role="navigation" className="flex justify-between items-center max-w-7xl mx-auto">
         <div className="flex items-center">
+          <img className="h-12 w-12" src="/images/Eppion-logo-removebg-preview.png" alt="Eppion-logo-head" />
           <a
             href="#home"
             className="text-xl md:text-2xl font-bold text-gradient"

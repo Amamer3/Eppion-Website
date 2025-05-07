@@ -16,9 +16,9 @@ const SmoothScroll = forwardRef<SmoothScrollRef, SmoothScrollProps>(({ children 
   const [height, setHeight] = useState(0);
   const requestRef = useRef<number>();
   const previousScrollRef = useRef(0);
-  const startTimeRef = useRef<number | null>(null);
-  const animationDurationRef = useRef(0);
-  const easeFactor = 0.1;
+  const startTimeRef = useRef<number | null>(null);  const animationDurationRef = useRef(0);
+  // Reduced ease factor for better performance on all devices
+  const easeFactor = 0.08;
 
   // Expose scrollTo method for Navbar
   useImperativeHandle(ref, () => ({
@@ -88,7 +88,9 @@ const SmoothScroll = forwardRef<SmoothScrollRef, SmoothScrollProps>(({ children 
     if (isScrolling || targetY !== null) {
       requestRef.current = requestAnimationFrame(animateScroll);
     } else {
-      cancelAnimationFrame(requestRef.current);
+      if (requestRef.current !== undefined) {
+        cancelAnimationFrame(requestRef.current);
+      }
       cancelAnimationFrame(requestRef.current);
       requestRef.current = undefined;
     }
@@ -103,26 +105,16 @@ const SmoothScroll = forwardRef<SmoothScrollRef, SmoothScrollProps>(({ children 
           requestRef.current = requestAnimationFrame(animateScroll);
         }
       }
-    };
-
-    const handleScrollEnd = () => {
+    };    const handleScrollEnd = () => {
       setIsScrolling(false);
     };
 
-    let timeout: NodeJS.Timeout;
-    const debouncedScroll = () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(handleScrollEnd, 100);
-    };
-
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('scrollend', debouncedScroll);
+    window.addEventListener('scrollend', handleScrollEnd);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scrollend', debouncedScroll);
-      clearTimeout(timeout);
-      if (requestRef.current) {
+      window.removeEventListener('scrollend', handleScrollEnd);      if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
     };
